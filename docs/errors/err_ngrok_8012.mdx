@@ -1,18 +1,30 @@
----
-hide_table_of_contents: true
-displayed_sidebar: docs
----
+// server/server.js
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
 
-import ErrorDetails from "/src/components/ErrorDetails";
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-# ERR_NGROK_8012
+// Middleware
+app.use(express.json());
+app.use(cors());
 
-### Message
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/instagramClone', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => {
+  console.log('Connected to MongoDB');
+}).catch(err => {
+  console.log(err);
+});
 
-Traffic was successfully tunneled to the ngrok agent, but the agent failed to establish a connection to the upstream web service at `ADDR`.
+// Dummy route
+app.get('/', (req, res) => {
+  res.send('Instagram Clone Backend');
+});
 
-<ErrorDetails error="err_ngrok_8012" />
-
-### Further help
-
-If you're having trouble resolving this error, please reach out to [support@ngrok.com](mailto:support@ngrok.com?subject=Help%20with%20ERR_NGROK_8012)
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
